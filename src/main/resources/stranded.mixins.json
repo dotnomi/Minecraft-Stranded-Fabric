@@ -3,7 +3,8 @@
 	"package": "com.dotnomi.stranded.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"TestMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

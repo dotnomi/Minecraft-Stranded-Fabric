@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.lang.reflect.Field;
 
 @Mixin(value = MidnightConfig.EntryInfo.class, remap = false)
-public abstract class TestMixin {
+public abstract class MidnightConfigEntryInfoMixin {
   @Shadow()
   String modid;
 
@@ -25,5 +25,6 @@ public abstract class TestMixin {
   @Inject(method = "setValue", at = @At("HEAD"))
   private void setValue(Object value, CallbackInfo ci) {
     Stranded.LOGGER.info("({}) [{}]: Setting value from {} to {}", StringUtils.capitalize(modid), field.getName(), this.value, value);
+    //TODO: invoke Event
   }
 }

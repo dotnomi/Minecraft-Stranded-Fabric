@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ExampleMixin",
-		"TestMixin"
+		"MidnightConfigAutoCommandMixin",
+		"MidnightConfigEntryInfoMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -4,6 +4,15 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
 public final class ConfigChangedEvent {
+  public static final Event<CommonConfigChanged> COMMON_CONFIG_CHANGED = EventFactory.createArrayBacked(
+    CommonConfigChanged.class,
+    listeners -> (modid, fieldName, oldValue, newValue) -> {
+      for (CommonConfigChanged listener : listeners) {
+        listener.onCommonConfigChanged(modid, fieldName, oldValue, newValue);
+      }
+    }
+  );
+
   public static final Event<ClientConfigChanged> CLIENT_CONFIG_CHANGED = EventFactory.createArrayBacked(
     ClientConfigChanged.class,
     listeners -> (modid, fieldName, oldValue, newValue) -> {
@@ -21,6 +30,11 @@ public final class ConfigChangedEvent {
       }
     }
   );
+
+  @FunctionalInterface
+  public interface CommonConfigChanged {
+    void onCommonConfigChanged(String modid, String fieldName, Object oldValue, Object newValue);
+  }
 
   @FunctionalInterface
   public interface ClientConfigChanged {

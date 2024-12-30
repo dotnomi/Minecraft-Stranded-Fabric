@@ -13,13 +13,13 @@ import java.lang.reflect.Field;
 
 @Mixin(value = MidnightConfig.EntryInfo.class, remap = false)
 public abstract class MidnightConfigEntryInfoMixin {
-  @Shadow()
+  @Shadow
   String modid;
 
-  @Shadow()
+  @Shadow
   Object value;
 
-  @Shadow()
+  @Shadow
   Field field;
 
   @Inject(method = "setValue", at = @At("HEAD"))

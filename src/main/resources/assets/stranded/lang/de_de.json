@@ -1,0 +1,6 @@
+{
+  "stranded.midnightconfig.title": "Stranded on Mars Einstellungen",
+  "stranded.midnightconfig.category.miscellaneous": "Sonstiges",
+  "stranded.midnightconfig.isDebugModeEnabled": "Debug-Modus umschalten (Benötigt neustart)",
+  "stranded.midnightconfig.isDebugModeEnabled.tooltip": "Test Hinweis"
+}

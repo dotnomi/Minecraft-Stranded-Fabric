@@ -19,6 +19,9 @@
 		"main": [
 			"com.dotnomi.stranded.Stranded"
 		],
+		"client": [
+			"com.dotnomi.stranded.Stranded"
+		],
 		"fabric-datagen": [
           "com.dotnomi.stranded.StrandedDataGenerator"
 		]

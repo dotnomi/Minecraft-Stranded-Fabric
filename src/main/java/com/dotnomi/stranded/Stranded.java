@@ -1,7 +1,7 @@
 package com.dotnomi.stranded;
 
 import com.dotnomi.stranded.event.ConfigChangedEvent;
-import com.dotnomi.stranded.event.TestHandler;
+import com.dotnomi.stranded.event.handler.ConfigChangedEventHandler;
 import com.dotnomi.stranded.logging.LoggerConfig;
 import com.mojang.logging.LogUtils;
 import eu.midnightdust.lib.config.MidnightConfig;
@@ -20,6 +20,8 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 		LoggerConfig.setDebugMode(LOGGER.getName(), ModConfig.isDebugModeEnabled);
 		Stranded.LOGGER.debug("Stranded Mod initialization...");
 
+		ConfigChangedEvent.EVENT.register(new ConfigChangedEventHandler());
+
 		LOGGER.debug("DEBUG");
 		LOGGER.info("INFO");
 		LOGGER.warn("WARN");
@@ -30,8 +32,6 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		Stranded.LOGGER.debug("Stranded Client initialization...");
-
-		ConfigChangedEvent.CLIENT_CONFIG_CHANGED.register(new TestHandler());
 
 		//TODO: Do Stuff
 

@@ -1,7 +1,7 @@
 package com.dotnomi.stranded.mixin;
 
 import com.dotnomi.stranded.event.ConfigChangedEvent;
-import com.dotnomi.stranded.event.ConfigEntryType;
+import com.dotnomi.stranded.config.ConfigEntryType;
 import eu.midnightdust.lib.config.MidnightConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

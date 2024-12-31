@@ -1,5 +1,6 @@
 package com.dotnomi.stranded.event;
 
+import com.dotnomi.stranded.config.ConfigEntryType;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 

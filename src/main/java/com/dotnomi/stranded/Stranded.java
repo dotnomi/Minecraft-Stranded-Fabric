@@ -1,5 +1,6 @@
 package com.dotnomi.stranded;
 
+import com.dotnomi.stranded.config.ModConfig;
 import com.dotnomi.stranded.event.ConfigChangedEvent;
 import com.dotnomi.stranded.event.handler.ConfigChangedEventHandler;
 import com.dotnomi.stranded.logging.LoggerConfig;

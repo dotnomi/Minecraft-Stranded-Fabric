@@ -1,5 +1,6 @@
 package com.dotnomi.stranded;
 
+import com.dotnomi.stranded.client.input.ModKeyBindings;
 import com.dotnomi.stranded.config.ModConfig;
 import com.dotnomi.stranded.event.ConfigChangedEvent;
 import com.dotnomi.stranded.event.handler.ConfigChangedEventHandler;
@@ -34,7 +35,7 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 	public void onInitializeClient() {
 		Stranded.LOGGER.debug("Stranded Client initialization...");
 
-		//TODO: Do Stuff
+		ModKeyBindings.register();
 
 		Stranded.LOGGER.debug("Stranded Client initialized successfully");
 	}

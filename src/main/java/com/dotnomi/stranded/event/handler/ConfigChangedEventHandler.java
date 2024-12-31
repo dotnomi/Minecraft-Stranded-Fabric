@@ -1,10 +1,10 @@
 package com.dotnomi.stranded.event.handler;
 
 import com.dotnomi.stranded.Stranded;
-import com.dotnomi.stranded.util.FieldUtils;
-import com.dotnomi.stranded.config.ModConfig;
-import com.dotnomi.stranded.event.ConfigChangedEvent;
 import com.dotnomi.stranded.config.ConfigEntryType;
+import com.dotnomi.stranded.config.ModConfig;
+import com.dotnomi.stranded.util.FieldUtils;
+import com.dotnomi.stranded.event.ConfigChangedEvent;
 import com.dotnomi.stranded.logging.LoggerConfig;
 
 public class ConfigChangedEventHandler implements ConfigChangedEvent {

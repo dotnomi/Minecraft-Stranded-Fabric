@@ -1,4 +1,4 @@
-package com.dotnomi.stranded.event;
+package com.dotnomi.stranded.config;
 
 public enum ConfigEntryType {
   COMMON,

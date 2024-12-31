@@ -1,7 +1,8 @@
-package com.dotnomi.stranded;
+package com.dotnomi.stranded.config;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 
+@SuppressWarnings("unused")
 public class ModConfig extends MidnightConfig {
   private static final String MISCELLANEOUS = "miscellaneous";
 

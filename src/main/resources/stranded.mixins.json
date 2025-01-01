@@ -4,9 +4,13 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin",
-    "MidnightConfigWriteMixin"
+    "MidnightConfigWriteMixin",
+    "SoundCategoryMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  },
+  "client": [
+    "InGameHudMixin"
+  ]
 }

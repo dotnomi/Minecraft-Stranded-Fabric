@@ -1,6 +1,7 @@
 package com.dotnomi.stranded.client.voiceover;
 
 import com.dotnomi.stranded.Stranded;
+import com.dotnomi.stranded.config.ModConfig;
 import com.dotnomi.stranded.sound.ModSoundCategories;
 import com.dotnomi.stranded.util.SoundUtils;
 import com.google.gson.Gson;
@@ -24,8 +25,6 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class VoiceoverManager {
-	private static final String VOICEOVER_SUBTITLE_SEPARATOR = "\u0001";
-
 	private static volatile VoiceoverManager instance;
 
 	private final Queue<Voiceover> voiceoverQueue = new ArrayDeque<>();
@@ -118,7 +117,7 @@ public class VoiceoverManager {
 		Subtitle subtitle = voiceover.subtitle();
 		if (subtitle != null && subtitle.index() < subtitleCount) {
 			String translatedSubtitles = I18n.translate(subtitle.translationKey());
-			String[] seperatedSubtitles = translatedSubtitles.split(VOICEOVER_SUBTITLE_SEPARATOR);
+			String[] seperatedSubtitles = translatedSubtitles.split(ModConfig.TEXT_SEPARATOR);
 
 			currentSubtitle = seperatedSubtitles[subtitle.index()];
 			hasVoiceoverEnded = false;
@@ -144,7 +143,7 @@ public class VoiceoverManager {
 		}
 
 		String translatedSubtitles = I18n.translate(voiceoverJson.get("subtitle").getAsString());
-		subtitleCount = translatedSubtitles.split(VOICEOVER_SUBTITLE_SEPARATOR).length;
+		subtitleCount = translatedSubtitles.split(ModConfig.TEXT_SEPARATOR).length;
 
 		JsonArray jsonSounds = voiceoverJson.getAsJsonArray("sounds");
 		for (int subtitleIndex = 0; subtitleIndex < jsonSounds.size(); subtitleIndex++) {

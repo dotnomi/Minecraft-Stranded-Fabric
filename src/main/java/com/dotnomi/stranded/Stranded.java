@@ -1,10 +1,12 @@
 package com.dotnomi.stranded;
 
+import com.dotnomi.stranded.block.ModBlocks;
 import com.dotnomi.stranded.client.input.ModKeyBindings;
 import com.dotnomi.stranded.client.voiceover.VoiceoverManager;
 import com.dotnomi.stranded.config.ModConfig;
 import com.dotnomi.stranded.event.ConfigChangedEvent;
 import com.dotnomi.stranded.event.handler.ConfigChangedEventHandler;
+import com.dotnomi.stranded.item.ModItems;
 import com.dotnomi.stranded.logging.LoggerConfig;
 import com.dotnomi.stranded.sound.ModSounds;
 import com.dotnomi.stranded.util.Lazy;
@@ -28,6 +30,8 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 		initializeConfig();
 		Stranded.LOGGER.debug("Stranded Mod initialization...");
 
+		ModItems.initialize();
+		ModBlocks.initialize();
 		ModSounds.register();
 
 		Stranded.LOGGER.debug("Stranded Mod initialized successfully");

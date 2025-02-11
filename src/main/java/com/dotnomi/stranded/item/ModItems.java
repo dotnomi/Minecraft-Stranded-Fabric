@@ -65,6 +65,7 @@ public class ModItems {
     if (item instanceof BlockItem blockItem) {
       blockItem.appendBlocks(Item.BLOCK_ITEMS, item);
     }
+    Stranded.LOGGER.debug("Registered item: {}", key.getValue());
     return Registry.register(Registries.ITEM, key, item);
   }
 }

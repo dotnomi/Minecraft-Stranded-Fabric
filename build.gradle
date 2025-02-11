@@ -77,5 +77,6 @@ publishing {
 }
 
 loom {
+	accessWidenerPath = file("src/main/resources/stranded.accesswidener")
 	log4jConfigs.from(file("src/main/resources/log4j-dev.xml"))
 }

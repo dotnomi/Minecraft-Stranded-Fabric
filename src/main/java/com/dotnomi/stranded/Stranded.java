@@ -1,6 +1,7 @@
 package com.dotnomi.stranded;
 
 import com.dotnomi.stranded.block.ModBlocks;
+import com.dotnomi.stranded.block.entity.ModBlockEntities;
 import com.dotnomi.stranded.client.input.ModKeyBindings;
 import com.dotnomi.stranded.client.voiceover.VoiceoverManager;
 import com.dotnomi.stranded.config.ModConfig;
@@ -32,6 +33,7 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 
 		ModItems.initialize();
 		ModBlocks.initialize();
+		ModBlockEntities.initialize();
 		ModSounds.register();
 
 		Stranded.LOGGER.debug("Stranded Mod initialized successfully");

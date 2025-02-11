@@ -1,10 +1,12 @@
 package com.dotnomi.stranded.block;
 
 import com.dotnomi.stranded.Stranded;
+import com.dotnomi.stranded.block.custom.StrandedCrafterBlock;
 import com.dotnomi.stranded.item.ModItems;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -17,11 +19,13 @@ import net.minecraft.util.Identifier;
 import java.util.function.Function;
 
 public class ModBlocks {
-  public static final Block TITANIUM_FOUNDATION = register("titanium_foundation", AbstractBlock.Settings.create());
+  public static final Block TITANIUM_FOUNDATION = register("titanium_foundation", AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
+  public static final StrandedCrafterBlock STRANDED_CRAFTER = register("stranded_crafter", StrandedCrafterBlock::new, AbstractBlock.Settings.copy(Blocks.STONE));
 
   public static void initialize() {
     ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
       entries.add(TITANIUM_FOUNDATION);
+      entries.add(STRANDED_CRAFTER);
     });
   }
 
@@ -30,12 +34,13 @@ public class ModBlocks {
   }
 
   public static Block register(String id, AbstractBlock.Settings settings) {
-    return register(keyOf(id), Block::new, settings);
+    return register(id, Block::new, settings);
   }
 
-  public static Block register(RegistryKey<Block> key, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-    Stranded.LOGGER.debug("Registered block: {}", key.toString());
-    Block block = factory.apply(settings.registryKey(key));
+  public static <T extends Block> T register(String id, Function<AbstractBlock.Settings, T> factory, AbstractBlock.Settings settings) {
+    RegistryKey<Block> key = keyOf(id);
+    T block = factory.apply(settings.registryKey(key));
+    Stranded.LOGGER.debug("Registered block: {}", key.getValue());
     Registry.register(Registries.BLOCK, key, block);
     ModItems.register(block, BlockItem::new, new Item.Settings());
     return block;

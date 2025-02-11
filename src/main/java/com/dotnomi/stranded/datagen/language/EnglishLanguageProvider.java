@@ -24,11 +24,20 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
 
     // Blocks
     translationBuilder.add("block.stranded.titanium_foundation", "Titanium Foundation");
+    translationBuilder.add("block.stranded.stranded_crafter", "Fabricator (Dummy)");
 
     // Config
     translationBuilder.add("stranded.midnightconfig.title", "Stranded on Mars Settings");
     translationBuilder.add("stranded.midnightconfig.category.miscellaneous", "Miscellaneous");
     translationBuilder.add("stranded.midnightconfig.isDebugModeEnabled", "Toggle Debug Mode");
+
+    // Keybindings
+    translationBuilder.add("key.category.stranded", "Stranded on Mars");
+    translationBuilder.add("key.stranded.debug", "Execute Debug Functions");
+    translationBuilder.add("key.stranded.skip-voiceover", "Skip Voiceover");
+
+    // Miscellaneous
+    translationBuilder.add("soundCategory.voiceover", "Stranded on Mars Voiceover");
 
     // Voiceover
     translationBuilder.add("hud.stranded.skip-voiceover", "Skip ({key})");
@@ -38,8 +47,5 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
       "Before you get any ideas, this is definitely not my fault." + ModConfig.TEXT_SEPARATOR +
       "In fact, I’m assigning all responsibility to you – after all, you're the one who’s supposed to be surviving here."
     );
-
-    // Miscellaneous
-    translationBuilder.add("soundCategory.voiceover", "Stranded on Mars Voiceover");
   }
 }

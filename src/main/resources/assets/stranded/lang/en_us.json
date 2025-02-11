@@ -1,8 +1,0 @@
-{
-  "stranded.midnightconfig.title": "Stranded on Mars Settings",
-  "stranded.midnightconfig.category.miscellaneous": "Miscellaneous",
-  "stranded.midnightconfig.isDebugModeEnabled": "Toggle Debug Mode (Requires restart)",
-
-  "hud.stranded.skip-voiceover": "Skip ({key})",
-  "voiceover.stranded.landing_intro": "Welcome back, Pioneer. I must say, your survival is... unexpected.\u0001But hey, let's not dwell on miracles. As you may have noticed, our ship has crash-landed on Mars.\u0001Before you get any ideas, this is definitely not my fault.\u0001In fact, I’m assigning all responsibility to you – after all, you're the one who’s supposed to be surviving here."
-}

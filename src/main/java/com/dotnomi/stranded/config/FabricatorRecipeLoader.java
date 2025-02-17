@@ -2,8 +2,8 @@ package com.dotnomi.stranded.config;
 
 import com.dotnomi.stranded.Stranded;
 import com.dotnomi.stranded.dto.FabricatorRecipe;
-import com.dotnomi.stranded.dto.FabricatorRecipeList;
 import com.dotnomi.stranded.util.JsonHandler;
+import com.google.common.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Items;
 
@@ -16,7 +16,7 @@ public class FabricatorRecipeLoader {
   private static FabricatorRecipeLoader instance;
 
   private final Path path;
-  private final JsonHandler<FabricatorRecipeList> jsonHandler;
+  private final JsonHandler<List<FabricatorRecipe>> jsonHandler;
 
   public static FabricatorRecipeLoader getInstance() {
     if (instance == null) {
@@ -27,19 +27,19 @@ public class FabricatorRecipeLoader {
 
   public FabricatorRecipeLoader() {
     this.path = FabricLoader.getInstance().getConfigDir().resolve(Stranded.MOD_ID).resolve("fabricator_recipes.json");
-    this.jsonHandler = new JsonHandler<>(this.path, FabricatorRecipeList.class);
+    this.jsonHandler = new JsonHandler<>(this.path, new TypeToken<>(){});
   }
 
-  public FabricatorRecipeList load() {
+  public List<FabricatorRecipe> load() {
     if (!Files.exists(this.path)) {
       jsonHandler.write(this.getDefaults());
     }
-    FabricatorRecipeList recipes = jsonHandler.read();
-    return recipes == null ? new FabricatorRecipeList(new ArrayList<>()) : recipes;
+    List<FabricatorRecipe> recipes = jsonHandler.read();
+    return recipes == null ? new ArrayList<>() : recipes;
   }
 
-  public FabricatorRecipeList getDefaults() {
-    return new FabricatorRecipeList(List.of(
+  public List<FabricatorRecipe> getDefaults() {
+    return List.of(
       new FabricatorRecipe.Builder()
         .withTitle("fabricator.recipe.iron_ingot")
         .withIngredient(Items.RAW_IRON, 1)
@@ -127,6 +127,6 @@ public class FabricatorRecipeLoader {
         .withResult(Items.GRASS_BLOCK, 1)
         .withSteps(10)
         .build()
-    ));
+    );
   }
 }

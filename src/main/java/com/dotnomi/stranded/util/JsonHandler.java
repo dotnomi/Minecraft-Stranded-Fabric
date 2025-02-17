@@ -4,7 +4,6 @@ import com.dotnomi.stranded.Stranded;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,12 +15,18 @@ import java.nio.file.Path;
 public class JsonHandler<T> {
   private final Gson gson;
   private final Path path;
-  private final TypeToken<T> typeToken;
+  private final com.google.common.reflect.TypeToken<T> typeToken;
 
   public JsonHandler(Path path, Class<T> objectClass) {
     this.path = path;
     this.gson = new GsonBuilder().setPrettyPrinting().create();
-    this.typeToken = TypeToken.get(objectClass);
+    this.typeToken = com.google.common.reflect.TypeToken.of(objectClass);
+  }
+
+  public JsonHandler(Path path, com.google.common.reflect.TypeToken<T> typeToken) {
+    this.path = path;
+    this.gson = new GsonBuilder().setPrettyPrinting().create();
+    this.typeToken = typeToken;
   }
 
   public T read() {

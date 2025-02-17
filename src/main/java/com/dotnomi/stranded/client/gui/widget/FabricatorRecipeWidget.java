@@ -102,7 +102,7 @@ public class FabricatorRecipeWidget extends ClickableWidget {
   public void onClick(double mouseX, double mouseY) {
     super.onClick(mouseX, mouseY);
     if (this.visible && this.active) {
-      this.fabricatorScreen.changeRecipe(recipe);
+      this.fabricatorScreen.changeRecipe(this.getRecipe());
     }
   }
 

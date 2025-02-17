@@ -30,16 +30,32 @@ public class FabricatorRecipe {
     }
   };
 
+  private String recipeGroupId;
   private String title;
   private HashMap<String, Integer> ingredients;
   private Pair<String, Integer> result;
   private int steps;
 
-  public FabricatorRecipe(final String title, final HashMap<String, Integer> ingredients, final Pair<String, Integer> result, final int steps) {
+  public FabricatorRecipe(
+    final String recipeGroupId,
+    final String title,
+    final HashMap<String, Integer> ingredients,
+    final Pair<String, Integer> result,
+    final int steps
+  ) {
+    this.recipeGroupId = recipeGroupId;
     this.title = title;
     this.ingredients = ingredients;
     this.result = result;
     this.steps = steps;
+  }
+
+  public String getRecipeGroupId() {
+    return recipeGroupId;
+  }
+
+  public void setRecipeGroupId(String recipeGroupId) {
+    this.recipeGroupId = recipeGroupId;
   }
 
   public String getTitle() {
@@ -77,12 +93,18 @@ public class FabricatorRecipe {
   }
 
   public static class Builder {
+    private String recipeGroupId;
     private String title;
     private final HashMap<String, Integer> ingredients = new HashMap<>();
     private Pair<String, Integer> result = new Pair<>(Items.DIRT.toString(), 1);
     private int steps = 1;
 
     public Builder() {}
+
+    public Builder withRecipeGroupId(String recipeGroupId) {
+      this.recipeGroupId = recipeGroupId;
+      return this;
+    }
 
     public Builder withTitle(String title) {
       this.title = title;
@@ -105,7 +127,7 @@ public class FabricatorRecipe {
     }
 
     public FabricatorRecipe build() {
-      return new FabricatorRecipe(title, ingredients, result, steps);
+      return new FabricatorRecipe(recipeGroupId, title, ingredients, result, steps);
     }
   }
 }

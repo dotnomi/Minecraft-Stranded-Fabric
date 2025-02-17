@@ -1,7 +1,6 @@
 package com.dotnomi.stranded.datagen;
 
 import com.dotnomi.stranded.dto.FabricatorRecipe;
-import com.dotnomi.stranded.dto.FabricatorRecipeList;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.DataOutput;
@@ -24,7 +23,7 @@ public class ModFabricatorRecipeProvider implements DataProvider {
 
   @Override
   public CompletableFuture<?> run(DataWriter writer) {
-    FabricatorRecipeList fabricatorRecipes = new FabricatorRecipeList(List.of(
+    List<FabricatorRecipe> fabricatorRecipes = List.of(
       new FabricatorRecipe.Builder()
         .withTitle("Eisenbarren")
         .withIngredient(Items.RAW_IRON, 1)
@@ -37,7 +36,7 @@ public class ModFabricatorRecipeProvider implements DataProvider {
         .withResult(Items.IRON_NUGGET, 5)
         .withSteps(1)
         .build()
-    ));
+    );
 
     Gson gson = new Gson();
     return DataProvider.writeToPath(writer, gson.toJsonTree(fabricatorRecipes), getRecipeConfigPath());

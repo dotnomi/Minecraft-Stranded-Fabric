@@ -1,4 +1,12 @@
 {
+  "fabricator_use": {
+    "subtitle": "sounds.stranded.fabricator_use",
+    "sounds": [
+      "stranded:fabricator_use_0",
+      "stranded:fabricator_use_1",
+      "stranded:fabricator_use_2"
+    ]
+  },
   "voiceover_landing_intro_0": {
     "subtitle": "sounds.stranded.voiceover_landing_intro",
     "sounds": [

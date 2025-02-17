@@ -1,6 +1,7 @@
 package com.dotnomi.stranded;
 
 import com.dotnomi.stranded.datagen.ModBlockTagProvider;
+import com.dotnomi.stranded.datagen.ModFabricatorRecipeProvider;
 import com.dotnomi.stranded.datagen.ModItemTagProvider;
 import com.dotnomi.stranded.datagen.ModLootTableProvider;
 import com.dotnomi.stranded.datagen.ModModelProvider;
@@ -23,6 +24,7 @@ public class StrandedDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(ModLootTableProvider::new);
 		pack.addProvider(ModModelProvider::new);
 		pack.addProvider(ModRecipeProvider::new);
+		pack.addProvider(ModFabricatorRecipeProvider::new);
 		Stranded.LOGGER.debug("Stranded Mod data generated successfully");
 	}
 }

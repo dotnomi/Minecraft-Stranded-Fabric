@@ -7,11 +7,10 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 
 public class FabricatorScrollBarWidget extends ClickableWidget {
-  private static final Identifier TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/stranded_crafter.png");
+  private static final Identifier TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/fabricator.png");
   private static final int WIDTH = 6;
   private static final int HEIGHT = 134;
   private static final int U = 314;
@@ -20,59 +19,25 @@ public class FabricatorScrollBarWidget extends ClickableWidget {
 
   private int scrollBarHeight;
   private int scrollBarOffset;
-
-  private int topY;
-  private int maxY;
-  private int minY;
   private int mouseClickOffset;
-  private int offset;
 
   public FabricatorScrollBarWidget(int x, int y) {
     super(x, y, WIDTH, HEIGHT, Text.empty());
-    this.maxY = 256;
-    this.minY = 0;
-    this.topY = y;
-    this.offset = 0;
     this.scrollBarHeight = HEIGHT;
     this.scrollBarOffset = 0;
   }
 
   public double getScrollFactor() {
-    return (double) (this.getY() - this.minY) / (this.maxY - getHeight() - this.minY);
+    return (double) scrollBarOffset / (this.getHeight() - this.scrollBarHeight);
   }
 
-  public int getTopY() {
-    return this.topY;
-  }
-
-  public int setTopY(int topY) {
-    return this.topY = topY;
-  }
-
-  public void setMaxY(int maxY) {
-    this.maxY = maxY;
-  }
-
-  public int getMaxY() {
-    return this.maxY;
-  }
-
-  public int getMinY() {
-    return this.minY;
-  }
-
-  public void setMinY(int minY) {
-    this.minY = minY;
-  }
-
-  public void setOffset(int offset) {
-    this.offset = offset;
+  public void setScrollBarHeight(int scrollBarHeight) {
+    this.scrollBarHeight = scrollBarHeight;
   }
 
   @Override
   protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-    context.fill(this.getX(), this.getTopY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), Colors.RED);
-    this.setY(Math.clamp(this.topY + this.offset, this.minY, this.maxY - getHeight()));
+    this.scrollBarOffset = Math.clamp(this.scrollBarOffset, 0, this.getHeight() - this.scrollBarHeight);
     if (this.active) {
       this.drawScrollbar(context, ACTIVE_V);
     } else {
@@ -86,13 +51,30 @@ public class FabricatorScrollBarWidget extends ClickableWidget {
   }
 
   @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    if (this.active && this.visible) {
+      if (mouseY >= this.getY() + this.scrollBarOffset && mouseY <= this.getY() + this.scrollBarOffset + this.scrollBarHeight) {
+        return super.mouseClicked(mouseX, mouseY, button);
+      }
+    }
+    return false;
+  }
+
+  @Override
   public void onClick(double mouseX, double mouseY) {
-    this.mouseClickOffset = Math.clamp((int) mouseY - getY(), 0, this.getHeight() - 1);
+    this.mouseClickOffset = Math.clamp((int) mouseY - this.getY() - this.scrollBarOffset, 0, this.scrollBarHeight - 1);
   }
 
   @Override
   protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
-    this.setOffset((int) (mouseY - this.mouseClickOffset - this.topY));
+    this.scrollBarOffset = (int) (mouseY - this.getY() - this.mouseClickOffset);
+  }
+
+  @Override
+  public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    double scrollSpeedFactor = Math.max(1.0, ((double) this.scrollBarHeight / this.getHeight()) * 8);
+    this.scrollBarOffset -= (int) (verticalAmount * scrollSpeedFactor);
+    return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
   }
 
   @Override
@@ -101,10 +83,11 @@ public class FabricatorScrollBarWidget extends ClickableWidget {
   }
 
   private void drawScrollbar(DrawContext context, int vOffset) {
-    context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, getX(), getY(), U, vOffset, getWidth(), 2, 512, 256);
-    for (int y = 2; y < getHeight() - 2; y++) {
-      context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, getX(), getY() + y, U, vOffset + 2, getWidth(), 1, 512, 256);
+    int y = this.getY() + this.scrollBarOffset;
+    context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, getX(), y, U, vOffset, getWidth(), 2, 512, 256);
+    for (int yOffset = 2; yOffset < this.scrollBarHeight - 2; yOffset++) {
+      context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, getX(), y + yOffset, U, vOffset + 2, getWidth(), 1, 512, 256);
     }
-    context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, getX(), getY() + getHeight() - 2, U, vOffset + 3, getWidth(), 2, 512, 256);
+    context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, getX(), y + this.scrollBarHeight - 2, U, vOffset + 3, getWidth(), 2, 512, 256);
   }
 }

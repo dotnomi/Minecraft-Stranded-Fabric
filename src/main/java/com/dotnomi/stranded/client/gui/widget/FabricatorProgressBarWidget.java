@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 
 public class FabricatorProgressBarWidget extends ClickableWidget {
-  private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/stranded_crafter.png");
+  private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/fabricator.png");
   private static final int WIDTH = 105;
   private static final int HEIGHT = 15;
   private static final int OVERLAY_U = 106;

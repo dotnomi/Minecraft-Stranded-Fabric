@@ -24,7 +24,7 @@ public class GermanLanguageProvider extends FabricLanguageProvider {
 
     // Blocks
     translationBuilder.add("block.stranded.titanium_foundation", "Titanium Fundament");
-    translationBuilder.add("block.stranded.stranded_crafter", "Verarbeiter (Dummy)");
+    translationBuilder.add("block.stranded.fabricator", "Verarbeiter");
 
     // Config
     translationBuilder.add("stranded.midnightconfig.title", "Stranded on Mars Einstellungen");

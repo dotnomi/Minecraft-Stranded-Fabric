@@ -13,7 +13,7 @@ import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 
 public class FabricatorIngredientWidget extends ClickableWidget {
-  private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/stranded_crafter.png");
+  private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/fabricator.png");
   private static final int WIDTH = 18;
   private static final int HEIGHT = 18;
   private static final int U = 320;

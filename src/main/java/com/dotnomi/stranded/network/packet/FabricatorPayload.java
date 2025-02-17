@@ -1,25 +1,22 @@
 package com.dotnomi.stranded.network.packet;
 
 import com.dotnomi.stranded.Stranded;
-import com.dotnomi.stranded.dto.FabricatorRecipeGroupList;
-import com.dotnomi.stranded.dto.FabricatorRecipeList;
+import com.dotnomi.stranded.dto.FabricatorInitializationData;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public record FabricatorPayload(BlockPos position, FabricatorRecipeGroupList recipeGroups, FabricatorRecipeList recipes) implements CustomPayload {
+public record FabricatorPayload(BlockPos position, FabricatorInitializationData data) implements CustomPayload {
   public static final CustomPayload.Id<FabricatorPayload> IDENTIFIER =
     new CustomPayload.Id<>(Identifier.of(Stranded.MOD_ID, "fabricator_initialize_packet"));
 
   public static final PacketCodec<RegistryByteBuf, FabricatorPayload> CODEC = PacketCodec.tuple(
     BlockPos.PACKET_CODEC,
     FabricatorPayload::position,
-    FabricatorRecipeGroupList.PACKET_CODEC,
-    FabricatorPayload::recipeGroups,
-    FabricatorRecipeList.PACKET_CODEC,
-    FabricatorPayload::recipes,
+    FabricatorInitializationData.PACKET_CODEC,
+    FabricatorPayload::data,
     FabricatorPayload::new
   );
 

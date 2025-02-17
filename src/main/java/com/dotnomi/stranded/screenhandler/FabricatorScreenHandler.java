@@ -3,6 +3,7 @@ package com.dotnomi.stranded.screenhandler;
 import com.dotnomi.stranded.block.ModBlocks;
 import com.dotnomi.stranded.block.entity.FabricatorBlockEntity;
 import com.dotnomi.stranded.dto.FabricatorRecipe;
+import com.dotnomi.stranded.dto.FabricatorRecipeGroup;
 import com.dotnomi.stranded.network.packet.FabricatorPayload;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,13 +17,16 @@ import java.util.List;
 public class FabricatorScreenHandler extends ScreenHandler {
   private final FabricatorBlockEntity blockEntity;
   private final ScreenHandlerContext context;
+  private final List<FabricatorRecipeGroup> recipeGroups = new ArrayList<>();
   private final List<FabricatorRecipe> recipes = new ArrayList<>();
 
   // Client Constructor
   public FabricatorScreenHandler(int syncId, PlayerInventory playerInventory, FabricatorPayload fabricatorPayload) {
     this(syncId, playerInventory, (FabricatorBlockEntity) playerInventory.player.getWorld().getBlockEntity(fabricatorPayload.position()));
+    this.recipeGroups.clear();
+    this.recipeGroups.addAll(fabricatorPayload.data().recipeGroups());
     this.recipes.clear();
-    this.recipes.addAll(fabricatorPayload.recipes().getRecipes());
+    this.recipes.addAll(fabricatorPayload.data().recipes());
   }
 
   // Main Constructor
@@ -52,5 +56,9 @@ public class FabricatorScreenHandler extends ScreenHandler {
 
   public List<FabricatorRecipe> getRecipes() {
     return recipes;
+  }
+
+  public List<FabricatorRecipeGroup> getRecipeGroups() {
+    return recipeGroups;
   }
 }

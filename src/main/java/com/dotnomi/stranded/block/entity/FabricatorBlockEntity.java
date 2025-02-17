@@ -2,6 +2,7 @@ package com.dotnomi.stranded.block.entity;
 
 import com.dotnomi.stranded.config.FabricatorRecipeGroupLoader;
 import com.dotnomi.stranded.config.FabricatorRecipeLoader;
+import com.dotnomi.stranded.dto.FabricatorInitializationData;
 import com.dotnomi.stranded.network.packet.FabricatorPayload;
 import com.dotnomi.stranded.screenhandler.FabricatorScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -27,7 +28,10 @@ public class FabricatorBlockEntity extends BlockEntity implements ExtendedScreen
 
   @Override
   public FabricatorPayload getScreenOpeningData(ServerPlayerEntity serverPlayerEntity) {
-    return new FabricatorPayload(this.getPos(), FabricatorRecipeGroupLoader.getInstance().load(), FabricatorRecipeLoader.getInstance().load());
+    return new FabricatorPayload(this.getPos(), new FabricatorInitializationData(
+      FabricatorRecipeGroupLoader.getInstance().load(),
+      FabricatorRecipeLoader.getInstance().load()
+    ));
   }
 
   @Override

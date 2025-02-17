@@ -2,8 +2,8 @@ package com.dotnomi.stranded.config;
 
 import com.dotnomi.stranded.Stranded;
 import com.dotnomi.stranded.dto.FabricatorRecipeGroup;
-import com.dotnomi.stranded.dto.FabricatorRecipeGroupList;
 import com.dotnomi.stranded.util.JsonHandler;
+import com.google.common.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +14,7 @@ public class FabricatorRecipeGroupLoader {
   private static FabricatorRecipeGroupLoader instance;
 
   private final Path path;
-  private final JsonHandler<FabricatorRecipeGroupList> jsonHandler;
+  private final JsonHandler<List<FabricatorRecipeGroup>> jsonHandler;
 
   public static FabricatorRecipeGroupLoader getInstance() {
     if (instance == null) {
@@ -25,21 +25,22 @@ public class FabricatorRecipeGroupLoader {
 
   public FabricatorRecipeGroupLoader() {
     this.path = FabricLoader.getInstance().getConfigDir().resolve(Stranded.MOD_ID).resolve("fabricator_recipe_groups.json");
-    this.jsonHandler = new JsonHandler<>(this.path, FabricatorRecipeGroupList.class);
+    this.jsonHandler = new JsonHandler<>(this.path, new TypeToken<>(){});
   }
 
-  public FabricatorRecipeGroupList load() {
+  public List<FabricatorRecipeGroup> load() {
     if (!Files.exists(this.path)) {
       jsonHandler.write(this.getDefaults());
     }
-    FabricatorRecipeGroupList recipeGroups = jsonHandler.read();
-    return recipeGroups == null ? new FabricatorRecipeGroupList(new ArrayList<>()) : recipeGroups;
+
+    List<FabricatorRecipeGroup> recipeGroups = jsonHandler.read();
+    return recipeGroups == null ? new ArrayList<>() : recipeGroups;
   }
 
-  public FabricatorRecipeGroupList getDefaults() {
-    return new FabricatorRecipeGroupList(List.of(
+  public List<FabricatorRecipeGroup> getDefaults() {
+    return List.of(
       new FabricatorRecipeGroup("test1"),
       new FabricatorRecipeGroup("test2")
-    ));
+    );
   }
 }

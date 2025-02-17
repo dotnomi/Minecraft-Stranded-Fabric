@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 
 public class FabricatorButtonWidget extends ClickableWidget {
-  private static final Identifier TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/stranded_crafter.png");
+  private static final Identifier TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/fabricator.png");
 
   private static final int WIDTH = 36;
   private static final int HEIGHT = 49;

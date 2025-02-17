@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
-  private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/stranded_crafter.png");
+  private static final Identifier BACKGROUND_TEXTURE = Identifier.of(Stranded.MOD_ID, "textures/gui/container/fabricator.png");
   private static final FabricatorRecipe DEFAULT_RECIPE = new FabricatorRecipe.Builder()
     .withIngredient(Items.ANDESITE, 0)
     .withIngredient(Items.DIORITE, 0)
@@ -46,7 +46,6 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
 
   private final BlockEntity blockEntity;
   private final PlayerInventory playerInventory;
-  private final List<FabricatorRecipe> recipes;
   private final FabricatorButtonWidget craftButton;
   private final FabricatorResultWidget resultWidget;
   private final List<FabricatorIngredientWidget> ingredientWidgets = new ArrayList<>();
@@ -61,15 +60,15 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
   private long lastStepTime = 0;
   private boolean hasFinished = false;
   private int recipeListScrollOffset = 0;
-
   private long lastOpacityTime = 0;
+  private boolean drawSearchIcon = true;
 
   public FabricatorScreen(FabricatorScreenHandler handler, PlayerInventory inventory, Text title) {
     super(handler, inventory, title);
     this.backgroundWidth = 279;
     this.backgroundHeight = 169;
     this.blockEntity = handler.getBlockEntity();
-    this.recipes = handler.getRecipes();
+    List<FabricatorRecipe> recipes = handler.getRecipes();
     this.playerInventory = inventory;
 
     this.currentRecipe = DEFAULT_RECIPE;
@@ -79,15 +78,13 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     this.resultWidget = new FabricatorResultWidget(0,0, ItemStack.EMPTY);
     this.progressBarWidget = new FabricatorProgressBarWidget(0,0);
     this.scrollBarWidget = new FabricatorScrollBarWidget(0,0);
-    this.searchTextField = new TextFieldWidget(Stranded.CLIENT.get().textRenderer, 0,0, 87, 8, Text.empty());
+    this.searchTextField = new TextFieldWidget(Stranded.CLIENT.get().textRenderer, 0,0, 79, 8, Text.empty());
 
     for (int i = 0; i < 3; i++) {
       this.ingredientWidgets.add(new FabricatorIngredientWidget(0, 0, ItemStack.EMPTY));
     }
 
-    recipes.forEach(recipe -> {
-      recipeWidgets.add(new FabricatorRecipeWidget(0, 0, recipe, this));
-    });
+    recipes.forEach(recipe -> recipeWidgets.add(new FabricatorRecipeWidget(0, 0, recipe, this)));
   }
 
   public void changeRecipe(FabricatorRecipe recipe) {
@@ -107,14 +104,17 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
 
   @Override
   public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-    double scrollSpeedFactor = Math.max (1.0, ((double) this.scrollBarWidget.getHeight() / 134) * 8);
-    this.scrollBarWidget.setOffset(this.scrollBarWidget.getY() - (int) (verticalAmount * scrollSpeedFactor) - this.scrollBarWidget.getTopY());
+    this.scrollBarWidget.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
   }
 
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
     if (this.getFocused() == this.searchTextField) {
+      if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+        this.setFocused(craftButton);
+        return true;
+      }
       return this.searchTextField.keyPressed(keyCode, scanCode, modifiers) && this.searchTextField.isActive();
     } else {
       if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_SPACE) {
@@ -156,7 +156,7 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     this.craftButton.setY(y + 19);
     this.addDrawableChild(this.craftButton);
 
-    this.searchTextField.setX(x + 12);
+    this.searchTextField.setX(x + 13);
     this.searchTextField.setY(y + 13);
     this.searchTextField.setPlaceholder(Text.literal("Search"));
     this.searchTextField.setFocusUnlocked(false);
@@ -170,9 +170,6 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     this.scrollBarWidget.setHeight(134);
     this.scrollBarWidget.setX(x + 94);
     this.scrollBarWidget.setY(y + 24);
-    this.scrollBarWidget.setMaxY(y + 158);
-    this.scrollBarWidget.setMinY(y + 24);
-    this.scrollBarWidget.setOffset(0);
     this.addDrawableChild(scrollBarWidget);
 
     this.resultWidget.setX(x + 188);
@@ -223,21 +220,9 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
 
   @Override
   public void resize(MinecraftClient client, int width, int height) {
-
-    int oldY = y;
-
-    /*int oldMinY = this.scrollBarWidget.getMinY();
-    int offsetY = this.scrollBarWidget.getY() - oldMinY;*/
     super.resize(client, width, height);
-    int newY = y;
-    this.scrollBarWidget.setTopY(this.y + 24);
-
-    /*int newMinY = this.scrollBarWidget.getMinY();
-
-    int minY = newMinY - oldMinY;
-    this.scrollBarWidget.setOffset(offsetY);*/
-    //this.scrollBarWidget.setY(y + newMinY + offsetY);
-    //Stranded.LOGGER.debug("Resize oldY={}, newY={}, scrollBarY={}, minY={}, maxY={}", oldY, newY, newY + 24, this.scrollBarWidget.getMinY(), this.scrollBarWidget.getMaxY());
+    this.scrollBarWidget.setY(y + 24);
+    this.scrollBarWidget.setScrollBarHeight(this.calculateScrollbarHeight());
   }
 
   @Override
@@ -256,11 +241,16 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     this.updateScrollbarActiveState();
     super.render(context, mouseX, mouseY, delta);
 
+    if (this.drawSearchIcon) {
+      context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, x + 91, y + 13, 428, 0, 7, 8, 512, 256);
+      if (this.searchTextField.isFocused()) {
+        this.drawSearchIcon = false;
+      }
+    }
+
     if (this.currentRecipe != this.lastRecipe) {
       this.lastRecipe = this.currentRecipe;
-      this.ingredientWidgets.forEach(ingredientWidget -> {
-        ingredientWidget.setItemStack(new ItemStack(Items.AIR, 0));
-      });
+      this.ingredientWidgets.forEach(ingredientWidget -> ingredientWidget.setItemStack(new ItemStack(Items.AIR, 0)));
       this.currentStep = 0;
     }
 
@@ -279,7 +269,7 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     });
     this.renderRecipeList(context);
 
-    this.scrollBarWidget.setHeight(this.calculateScrollbarHeight());
+    this.scrollBarWidget.setScrollBarHeight(this.calculateScrollbarHeight());
     this.recipeListScrollOffset = (int) (this.scrollBarWidget.getScrollFactor() * -this.getScrollableContentHeight());
 
     int ingredientCount = currentRecipe.getIngredients().size();
@@ -380,7 +370,7 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
   }
 
   private int getScrollableContentHeight() {
-    return recipeWidgets.size() * 18 - 134;
+    return this.getVisibleRecipeCount() * 18 - 134;
   }
 
   private int calculateScrollbarHeight() {
@@ -388,10 +378,20 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     if (scrollableHeight <= 0) {
       return 134;
     } else {
-      float ratio = (float) 134 / (recipeWidgets.size() * 18);
+      float ratio = (float) 134 / (this.getVisibleRecipeCount() * 18);
       int scrollbarHeight = (int) (134 * ratio);
       return Math.max(scrollbarHeight, 16);
     }
+  }
+
+  private int getVisibleRecipeCount() {
+    int visibleRecipeCount = 0;
+    for (FabricatorRecipeWidget recipeWidget : this.recipeWidgets) {
+      if (recipeWidget.visible) {
+        visibleRecipeCount++;
+      }
+    }
+    return visibleRecipeCount;
   }
 
   private void updateScrollbarActiveState() {

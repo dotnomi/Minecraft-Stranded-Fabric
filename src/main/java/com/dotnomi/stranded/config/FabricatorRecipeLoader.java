@@ -1,79 +1,132 @@
 package com.dotnomi.stranded.config;
 
 import com.dotnomi.stranded.Stranded;
+import com.dotnomi.stranded.dto.FabricatorRecipe;
 import com.dotnomi.stranded.dto.FabricatorRecipeList;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.dotnomi.stranded.util.JsonHandler;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.Items;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FabricatorRecipeLoader {
-  private static final String RECIPE_FILE_NAME = "fabricator_recipes.json";
-
   private static FabricatorRecipeLoader instance;
 
-  private Path path;
+  private final Path path;
+  private final JsonHandler<FabricatorRecipeList> jsonHandler;
 
   public static FabricatorRecipeLoader getInstance() {
     if (instance == null) {
       instance = new FabricatorRecipeLoader();
     }
-
-    instance.path = FabricLoader.getInstance().getConfigDir().resolve(Stranded.MOD_ID).resolve(RECIPE_FILE_NAME);
     return instance;
+  }
+
+  public FabricatorRecipeLoader() {
+    this.path = FabricLoader.getInstance().getConfigDir().resolve(Stranded.MOD_ID).resolve("fabricator_recipes.json");
+    this.jsonHandler = new JsonHandler<>(this.path, FabricatorRecipeList.class);
   }
 
   public FabricatorRecipeList load() {
     if (!Files.exists(this.path)) {
-      Stranded.LOGGER.debug("No fabricator recipes config found. Creating from default...");
-      createDefaultRecipeFile();
+      jsonHandler.write(this.getDefaults());
     }
-
-    Stranded.LOGGER.debug("Loading fabricator recipes...");
-    return loadRecipesFromJson(this.path);
+    FabricatorRecipeList recipes = jsonHandler.read();
+    return recipes == null ? new FabricatorRecipeList(new ArrayList<>()) : recipes;
   }
 
-  private void createDefaultRecipeFile() {
-    generateRecipeJson(DefaultFabricatorRecipes.getDefaultFabricatorRecipes());
-  }
-
-  private FabricatorRecipeList loadRecipesFromJson(Path recipesPath) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    try (BufferedReader reader = Files.newBufferedReader(recipesPath, StandardCharsets.UTF_8)) {
-      FabricatorRecipeList recipes = gson.fromJson(reader, FabricatorRecipeList.class);
-      if (recipes == null) {
-        return new FabricatorRecipeList(new ArrayList<>());
-      }
-      return recipes;
-    } catch (IOException exception) {
-      Stranded.LOGGER.error("Failed to load fabricator recipes.", exception);
-      return new FabricatorRecipeList(new ArrayList<>());
-    }
-  }
-
-  private void generateRecipeJson(FabricatorRecipeList recipes) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    String json = gson.toJson(recipes);
-
-    try {
-      Files.createDirectories(this.path.getParent());
-    } catch (IOException exception) {
-      Stranded.LOGGER.error("Failed to create directories for the config file.", exception);
-    }
-
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.path.toFile()))) {
-      writer.write(json);
-    } catch (IOException exception) {
-      Stranded.LOGGER.error("Failed to write to the config file.", exception);
-    }
+  public FabricatorRecipeList getDefaults() {
+    return new FabricatorRecipeList(List.of(
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.iron_ingot")
+        .withIngredient(Items.RAW_IRON, 1)
+        .withResult(Items.IRON_INGOT, 1)
+        .withSteps(3)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.iron_nuggets")
+        .withIngredient(Items.IRON_INGOT, 1)
+        .withResult(Items.IRON_NUGGET, 5)
+        .withSteps(1)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.netherite_ingot")
+        .withIngredient(Items.IRON_INGOT, 1)
+        .withIngredient(Items.COAL, 2)
+        .withResult(Items.NETHERITE_INGOT, 1)
+        .withSteps(5)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.diorite")
+        .withIngredient(Items.STONE, 1)
+        .withIngredient(Items.WHITE_DYE, 1)
+        .withIngredient(Items.BLACK_DYE, 1)
+        .withResult(Items.DIORITE, 1)
+        .withSteps(3)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy1")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(1)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy2")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(2)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy3")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(3)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy4")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(4)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy5")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(5)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy6")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(6)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy7")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(7)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy8")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(8)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy9")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(9)
+        .build(),
+      new FabricatorRecipe.Builder()
+        .withTitle("fabricator.recipe.dummy10")
+        .withIngredient(Items.DIRT, 1)
+        .withResult(Items.GRASS_BLOCK, 1)
+        .withSteps(10)
+        .build()
+    ));
   }
 }

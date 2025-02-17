@@ -1,7 +1,6 @@
 package com.dotnomi.stranded.block;
 
 import com.dotnomi.stranded.Stranded;
-import com.dotnomi.stranded.block.custom.StrandedCrafterBlock;
 import com.dotnomi.stranded.item.ModItems;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
@@ -20,12 +19,12 @@ import java.util.function.Function;
 
 public class ModBlocks {
   public static final Block TITANIUM_FOUNDATION = register("titanium_foundation", AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
-  public static final StrandedCrafterBlock STRANDED_CRAFTER = register("stranded_crafter", StrandedCrafterBlock::new, AbstractBlock.Settings.copy(Blocks.STONE));
+  public static final FabricatorBlock FABRICATOR = register("fabricator", FabricatorBlock::new, AbstractBlock.Settings.copy(Blocks.STONE));
 
   public static void initialize() {
     ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
       entries.add(TITANIUM_FOUNDATION);
-      entries.add(STRANDED_CRAFTER);
+      entries.add(FABRICATOR);
     });
   }
 

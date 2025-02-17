@@ -39,6 +39,22 @@ public class EnglishLanguageProvider extends FabricLanguageProvider {
     // Miscellaneous
     translationBuilder.add("soundCategory.voiceover", "Stranded on Mars Voiceover");
 
+    // Fabricator Recipes
+    translationBuilder.add("fabricator.recipe.iron_ingot", "Iron Ingot");
+    translationBuilder.add("fabricator.recipe.iron_nuggets", "Iron Nuggets");
+    translationBuilder.add("fabricator.recipe.netherite_ingot", "Netherite Ingot");
+    translationBuilder.add("fabricator.recipe.diorite", "Diorite");
+    translationBuilder.add("fabricator.recipe.dummy1", "Dummy 1");
+    translationBuilder.add("fabricator.recipe.dummy2", "Dummy 2");
+    translationBuilder.add("fabricator.recipe.dummy3", "Dummy 3");
+    translationBuilder.add("fabricator.recipe.dummy4", "Dummy 4");
+    translationBuilder.add("fabricator.recipe.dummy5", "Dummy 5");
+    translationBuilder.add("fabricator.recipe.dummy6", "Dummy 6");
+    translationBuilder.add("fabricator.recipe.dummy7", "Dummy 7");
+    translationBuilder.add("fabricator.recipe.dummy8", "Dummy 8");
+    translationBuilder.add("fabricator.recipe.dummy9", "Dummy 9");
+    translationBuilder.add("fabricator.recipe.dummy10", "Dummy 10");
+
     // Voiceover
     translationBuilder.add("hud.stranded.skip-voiceover", "Skip ({key})");
     translationBuilder.add("voiceover.stranded.landing_intro",

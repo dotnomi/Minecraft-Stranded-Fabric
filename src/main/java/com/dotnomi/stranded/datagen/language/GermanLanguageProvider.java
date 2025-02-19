@@ -39,6 +39,10 @@ public class GermanLanguageProvider extends FabricLanguageProvider {
     // Miscellaneous
     translationBuilder.add("soundCategory.voiceover", "Stranded on Mars Sprachausgabe");
 
+    // Fabricator Recipe Groups
+    translationBuilder.add("fabricator.recipeGroup.test", "Test Gruppe");
+    translationBuilder.add("fabricator.recipeGroup.dummy", "Dummy Gruppe");
+
     // Fabricator Recipes
     translationBuilder.add("fabricator.recipe.iron_ingot", "Eisenbarren");
     translationBuilder.add("fabricator.recipe.iron_nuggets", "Eisenklumpen");

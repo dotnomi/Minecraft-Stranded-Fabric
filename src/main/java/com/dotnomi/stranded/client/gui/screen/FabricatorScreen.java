@@ -3,10 +3,12 @@ package com.dotnomi.stranded.client.gui.screen;
 import com.dotnomi.stranded.Stranded;
 import com.dotnomi.stranded.client.gui.widget.FabricatorButtonWidget;
 import com.dotnomi.stranded.client.gui.widget.FabricatorProgressBarWidget;
+import com.dotnomi.stranded.client.gui.widget.FabricatorRecipeGroupWidget;
 import com.dotnomi.stranded.client.gui.widget.FabricatorRecipeWidget;
 import com.dotnomi.stranded.client.gui.widget.FabricatorResultWidget;
 import com.dotnomi.stranded.client.gui.widget.FabricatorScrollBarWidget;
 import com.dotnomi.stranded.client.gui.widget.FabricatorIngredientWidget;
+import com.dotnomi.stranded.dto.FabricatorRecipeGroup;
 import com.dotnomi.stranded.util.InventoryUtils;
 import com.dotnomi.stranded.dto.FabricatorRecipe;
 import com.dotnomi.stranded.network.packet.FabricatorCraftingFinishedC2SPayload;
@@ -19,6 +21,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -52,6 +55,7 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
   private final FabricatorProgressBarWidget progressBarWidget;
   private final FabricatorScrollBarWidget scrollBarWidget;
   private final List<FabricatorRecipeWidget> recipeWidgets = new ArrayList<>();
+  private final List<FabricatorRecipeGroupWidget> recipeGroupWidgets = new ArrayList<>();
   private final TextFieldWidget searchTextField;
 
   private FabricatorRecipe currentRecipe;
@@ -68,7 +72,6 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     this.backgroundWidth = 279;
     this.backgroundHeight = 169;
     this.blockEntity = handler.getBlockEntity();
-    List<FabricatorRecipe> recipes = handler.getRecipes();
     this.playerInventory = inventory;
 
     this.currentRecipe = DEFAULT_RECIPE;
@@ -84,7 +87,8 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
       this.ingredientWidgets.add(new FabricatorIngredientWidget(0, 0, ItemStack.EMPTY));
     }
 
-    recipes.forEach(recipe -> recipeWidgets.add(new FabricatorRecipeWidget(0, 0, recipe, this)));
+    handler.getRecipes().forEach(recipe -> recipeWidgets.add(new FabricatorRecipeWidget(0, 0, recipe, this)));
+    handler.getRecipeGroups().forEach(recipeGroup -> recipeGroupWidgets.add(new FabricatorRecipeGroupWidget(0, 0, recipeGroup)));
   }
 
   public void changeRecipe(FabricatorRecipe recipe) {
@@ -210,9 +214,18 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
 
     for (FabricatorRecipeWidget recipeWidget : recipeWidgets) {
       this.addDrawableChild(recipeWidget);
+      recipeWidget.setX(this.x + 11);
     }
 
-    this.currentRecipe = recipeWidgets.getFirst().getRecipe();
+    for (FabricatorRecipeGroupWidget recipeGroupWidget : recipeGroupWidgets) {
+      this.addDrawableChild(recipeGroupWidget);
+      recipeGroupWidget.setX(this.x + 11);
+    }
+
+    List<FabricatorRecipeWidget> visibleRecipeWidgets = recipeWidgets.stream().filter(recipeWidget -> recipeWidget.visible).toList();
+    if (!visibleRecipeWidgets.isEmpty()) {
+      this.currentRecipe = visibleRecipeWidgets.getFirst().getRecipe();
+    }
 
     this.updateButtonStatus();
     this.updateCraftingProgress();
@@ -254,24 +267,18 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
       this.currentStep = 0;
     }
 
-    recipeWidgets.forEach(recipeWidget -> {
-      if (!this.searchTextField.getText().isBlank()) {
-        if (recipeWidget.getRecipe().getTitle().toLowerCase().contains(this.searchTextField.getText().toLowerCase())) {
-          recipeWidget.visible = true;
-          recipeWidget.setHighlightedText(this.searchTextField.getText());
-        } else {
-          recipeWidget.visible = false;
-        }
-      } else {
-        recipeWidget.visible = true;
-        recipeWidget.setHighlightedText("");
-      }
-    });
     this.renderRecipeList(context);
 
     this.scrollBarWidget.setScrollBarHeight(this.calculateScrollbarHeight());
     this.recipeListScrollOffset = (int) (this.scrollBarWidget.getScrollFactor() * -this.getScrollableContentHeight());
 
+    this.renderIngredientsAndResult();
+    this.updateCraftingProgress();
+    this.drawMouseoverTooltip(context, mouseX, mouseY);
+  }
+
+
+  private void renderIngredientsAndResult() {
     int ingredientCount = currentRecipe.getIngredients().size();
 
     int startX = x + 107;
@@ -301,9 +308,6 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
       this.currentRecipe.getResult().getLeft(),
       this.currentRecipe.getResult().getRight()
     ));
-
-    this.updateCraftingProgress();
-    this.drawMouseoverTooltip(context, mouseX, mouseY);
   }
 
   private void updateCraftingProgress() {
@@ -353,32 +357,80 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
     this.craftButton.active = InventoryUtils.hasIngredients(this.playerInventory, this.currentRecipe) && InventoryUtils.hasInventorySpace(this.playerInventory, this.currentRecipe);
   }
 
+
+
   private void renderRecipeList(DrawContext context) {
-    int minusIndex = 0;
-    for (int index = 0; index < recipeWidgets.size(); index++) {
-      FabricatorRecipeWidget recipeWidget = this.recipeWidgets.get(index);
-      if (!recipeWidget.visible) {
-        minusIndex++;
-        continue;
+    int startY = this.y + 24 + this.recipeListScrollOffset;
+    int yOffset = 0;
+    String searchText = this.searchTextField.getText();
+    for (FabricatorRecipeWidget recipeWidget : this.recipeWidgets) {
+      recipeWidget.setMaxCraftableAmount(InventoryUtils.calculateMaxCraftable(playerInventory, recipeWidget.getRecipe()));
+      if (!searchText.isBlank()) {
+        recipeWidget.visible = this.isTranslatedRecipeTitleMatching(recipeWidget, searchText);
+      } else {
+        recipeWidget.visible = this.isRecipeGroupVisible(recipeWidget);
       }
-      recipeWidget.setClipping(this.x + 11, this.y + 24, this.x + 92, this.y + 158);
-      recipeWidget.setX(this.x + 11);
-      recipeWidget.setY(this.y + this.recipeListScrollOffset + 24 + (index - minusIndex) * 18);
+      recipeWidget.setHighlightedText(searchText);
+    }
+
+    for (FabricatorRecipeGroupWidget recipeGroupWidget : this.recipeGroupWidgets) {
+      recipeGroupWidget.setClipping(this.x + 11, this.y + 24, this.x + 92, this.y + 158);
+      recipeGroupWidget.setY(startY + yOffset);
+      yOffset += 12;
+
+      for (FabricatorRecipeWidget recipeWidget : recipeWidgets) {
+        if (!recipeWidget.visible) {
+          continue;
+        }
+
+        if (isSameRecipeGroup(recipeGroupWidget.getRecipeGroup(), recipeWidget.getRecipe())) {
+          recipeWidget.setClipping(this.x + 11, this.y + 24, this.x + 92, this.y + 158);
+          recipeWidget.setY(startY + yOffset);
+          yOffset += 18;
+        }
+      }
     }
     context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, this.x+ 10, this.y + 23, 10, 169, 83, 2, 512, 256);
     context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, this.x+ 10, this.y + 157, 10, 171, 83, 2, 512, 256);
   }
 
+  private boolean isRecipeGroupVisible(FabricatorRecipeWidget recipeWidget) {
+    for (FabricatorRecipeGroupWidget recipeGroupWidget : this.recipeGroupWidgets) {
+      if (isSameRecipeGroup(recipeGroupWidget.getRecipeGroup(), recipeWidget.getRecipe())) {
+        return recipeGroupWidget.getIsRecipeGroupVisible();
+      }
+    }
+    return false;
+  }
+
+  private boolean isSameRecipeGroup(FabricatorRecipeGroup recipeGroup, FabricatorRecipe recipe) {
+    if (recipeGroup == null || recipeGroup.getId() == null || recipe == null || recipe.getRecipeGroupId() == null) {
+      return false;
+    }
+    return recipeGroup.getId().equalsIgnoreCase(recipe.getRecipeGroupId());
+  }
+
+  private boolean isTranslatedRecipeTitleMatching(FabricatorRecipeWidget recipeWidget, String searchText) {
+    if (recipeWidget == null || recipeWidget.getRecipe() == null || recipeWidget.getRecipe().getTitle() == null || searchText == null) {
+      return false;
+    }
+    return I18n.translate(recipeWidget.getRecipe().getTitle()).toLowerCase().contains(searchText.toLowerCase());
+  }
+
   private int getScrollableContentHeight() {
-    return this.getVisibleRecipeCount() * 18 - 134;
+    int visibleRecipeHeight = this.getVisibleRecipeCount() * 18;
+    int visibleRecipeGroupHeight = this.getVisibleRecipeGroupCount() * 12;
+    return visibleRecipeHeight + visibleRecipeGroupHeight - 134;
   }
 
   private int calculateScrollbarHeight() {
     int scrollableHeight = getScrollableContentHeight();
+    int visibleRecipeHeight = this.getVisibleRecipeCount() * 18;
+    int visibleRecipeGroupHeight = this.getVisibleRecipeGroupCount() * 12;
     if (scrollableHeight <= 0) {
       return 134;
     } else {
-      float ratio = (float) 134 / (this.getVisibleRecipeCount() * 18);
+      float ratio = (float) 134 / (visibleRecipeHeight + visibleRecipeGroupHeight);
       int scrollbarHeight = (int) (134 * ratio);
       return Math.max(scrollbarHeight, 16);
     }
@@ -392,6 +444,16 @@ public class FabricatorScreen extends HandledScreen<FabricatorScreenHandler> {
       }
     }
     return visibleRecipeCount;
+  }
+
+  private int getVisibleRecipeGroupCount() {
+    int visibleRecipeGroupCount = 0;
+    for (FabricatorRecipeGroupWidget recipeWidget : this.recipeGroupWidgets) {
+      if (recipeWidget.visible) {
+        visibleRecipeGroupCount++;
+      }
+    }
+    return visibleRecipeGroupCount;
   }
 
   private void updateScrollbarActiveState() {

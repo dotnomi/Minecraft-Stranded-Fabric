@@ -64,4 +64,39 @@ public class InventoryUtils {
     }
     return false;
   }
+
+  public static int calculateMaxCraftable(PlayerInventory inventory, FabricatorRecipe recipe) {
+    int maxCraftableAmount = Integer.MAX_VALUE;
+
+    for (Map.Entry<Item, Integer> ingredient : recipe.getIngredients().entrySet()) {
+      int requiredAmount = ingredient.getValue();
+
+      if (requiredAmount <= 0) {
+        continue;
+      }
+
+      int availableAmount = 0;
+      for (int i = 0; i < inventory.size(); i++) {
+        ItemStack stackInSlot = inventory.getStack(i);
+        if (stackInSlot.isOf(ingredient.getKey())) {
+          availableAmount += stackInSlot.getCount();
+        }
+      }
+
+      if (availableAmount == 0) {
+        return 0;
+      }
+
+      int maxCraftableForIngredient = availableAmount / requiredAmount;
+      if (maxCraftableForIngredient < maxCraftableAmount) {
+        maxCraftableAmount = maxCraftableForIngredient;
+      }
+    }
+
+    if (maxCraftableAmount == Integer.MAX_VALUE) {
+      return 0;
+    }
+
+    return maxCraftableAmount;
+  }
 }

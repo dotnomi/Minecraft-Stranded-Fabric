@@ -3,6 +3,7 @@ package com.dotnomi.stranded.client.gui.widget;
 import com.dotnomi.stranded.Stranded;
 import com.dotnomi.stranded.client.gui.screen.FabricatorScreen;
 import com.dotnomi.stranded.dto.FabricatorRecipe;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -27,6 +28,7 @@ public class FabricatorRecipeWidget extends ClickableWidget {
   private final FabricatorScreen fabricatorScreen;
 
   private String highlightedText = "";
+  private int maxCraftableAmount = 0;
   private int clippingStartX = 0;
   private int clippingEndX = 0;
   private int clippingStartY = 0;
@@ -53,12 +55,13 @@ public class FabricatorRecipeWidget extends ClickableWidget {
     this.clippingEndY = endY;
   }
 
+  public void setMaxCraftableAmount(int maxCraftableAmount) {
+    this.maxCraftableAmount = maxCraftableAmount;
+  }
+
   @Override
   protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-    if (!this.visible) {
-      return;
-    }
-
+    if (!this.visible) return;
     context.getMatrices().push();
     context.enableScissor( this.clippingStartX, this.clippingStartY, this.clippingEndX, this.clippingEndY);
     if (this.isHovered() && this.isMouseInClippingZone(mouseX, mouseY)) {
@@ -68,7 +71,11 @@ public class FabricatorRecipeWidget extends ClickableWidget {
     }
 
     context.drawItem(new ItemStack(this.recipe.getResult().getLeft()), getX() + 1, getY() + 1);
+    context.getMatrices().pop();
 
+    drawCraftableAmount(context, getX(), getY());
+
+    context.getMatrices().push();
     String translatedRecipeTitle = I18n.translate(this.recipe.getTitle());
     MutableText recipeTitle = Text.literal("");
     int startIndex = translatedRecipeTitle.toLowerCase().indexOf(this.highlightedText.toLowerCase());
@@ -108,5 +115,25 @@ public class FabricatorRecipeWidget extends ClickableWidget {
 
   private boolean isMouseInClippingZone(double mouseX, double mouseY) {
     return (mouseX >= this.clippingStartX && mouseX <= this.clippingEndX) && (mouseY >= this.clippingStartY && mouseY <= this.clippingEndY);
+  }
+
+  private void drawCraftableAmount(DrawContext context, int x, int y) {
+    TextRenderer textRenderer = Stranded.CLIENT.get().textRenderer;
+    Text itemCount;
+    int color = Colors.WHITE;
+    if (maxCraftableAmount <= 0) {
+      itemCount = Text.literal("0");
+      color = Colors.LIGHT_RED;
+    } else {
+      itemCount = Text.literal(String.valueOf(maxCraftableAmount));
+    }
+    context.getMatrices().push();
+    context.getMatrices().translate(0.0F, 0.0F, 200.0F);
+    if (textRenderer.getWidth(itemCount) >= 14) {
+      drawScrollableText(context, textRenderer, itemCount, x + 1, y + 9, x + 16, y + 17, color);
+    } else {
+      context.drawText(textRenderer, itemCount, x + 17 - textRenderer.getWidth(itemCount), y + 9, color, true);
+    }
+    context.getMatrices().pop();
   }
 }

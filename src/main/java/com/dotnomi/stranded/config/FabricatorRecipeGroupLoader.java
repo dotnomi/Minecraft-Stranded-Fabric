@@ -39,8 +39,8 @@ public class FabricatorRecipeGroupLoader {
 
   public List<FabricatorRecipeGroup> getDefaults() {
     return List.of(
-      new FabricatorRecipeGroup("test1"),
-      new FabricatorRecipeGroup("test2")
+      new FabricatorRecipeGroup("test"),
+      new FabricatorRecipeGroup("dummy")
     );
   }
 }

@@ -125,7 +125,7 @@ public class FabricatorRecipeWidget extends ClickableWidget {
       itemCount = Text.literal("0");
       color = Colors.LIGHT_RED;
     } else {
-      itemCount = Text.literal(String.valueOf(maxCraftableAmount));
+      itemCount = Text.literal(String.valueOf(maxCraftableAmount * this.getRecipe().getResult().getRight()));
     }
     context.getMatrices().push();
     context.getMatrices().translate(0.0F, 0.0F, 200.0F);

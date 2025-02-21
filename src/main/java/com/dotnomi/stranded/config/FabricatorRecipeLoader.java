@@ -51,7 +51,7 @@ public class FabricatorRecipeLoader {
         .withRecipeGroupId("test")
         .withTitle("fabricator.recipe.iron_nuggets")
         .withIngredient(Items.IRON_INGOT, 1)
-        .withResult(Items.IRON_NUGGET, 5)
+        .withResult(Items.IRON_NUGGET, 4)
         .withSteps(1)
         .build(),
       new FabricatorRecipe.Builder()

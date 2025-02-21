@@ -42,8 +42,14 @@ public class JsonHandler<T> {
   }
 
   public void write(T object) {
-    try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-      gson.toJson(object, typeToken.getType(), writer);
+    try {
+      if (!Files.exists(path)) {
+        Files.createDirectories(this.path.getParent());
+      }
+
+      try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+        gson.toJson(object, typeToken.getType(), writer);
+      }
     } catch (IOException exception) {
       Stranded.LOGGER.error("Error while writing to the JSON file: {}", path, exception);
     }

@@ -1,24 +1,16 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
-
 name: Build and Release
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [
           21,
         ]
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code

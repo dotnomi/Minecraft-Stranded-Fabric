@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "stranded:block/power_outlet",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "stranded:block/power_outlet",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "stranded:block/power_outlet",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "stranded:block/power_outlet",
+      "x": 90,
+      "y": 90
+    },
+    "facing=up": {
+      "model": "stranded:block/power_outlet"
+    },
+    "facing=down": {
+      "model": "stranded:block/power_outlet",
+      "x": 180
+    }
+  }
+}

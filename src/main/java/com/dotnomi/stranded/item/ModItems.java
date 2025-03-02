@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -29,7 +28,7 @@ public class ModItems {
   public static final Item SULPHUR = register("sulphur", new Item.Settings());
 
   public static void initialize() {
-    ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+    ItemGroupEvents.modifyEntriesEvent(ModItemGroups.STRANDED_ITEMS).register(entries -> {
       entries.add(ACRYLITE);
       entries.add(RAW_TITANIUM);
       entries.add(TITANIUM_INGOT);

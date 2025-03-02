@@ -4,10 +4,12 @@ import com.dotnomi.stranded.block.ModBlocks;
 import com.dotnomi.stranded.block.entity.ModBlockEntities;
 import com.dotnomi.stranded.client.input.ModKeyBindings;
 import com.dotnomi.stranded.client.gui.screen.FabricatorScreen;
+import com.dotnomi.stranded.client.render.CableRenderer;
 import com.dotnomi.stranded.client.voiceover.VoiceoverManager;
 import com.dotnomi.stranded.config.ModConfig;
 import com.dotnomi.stranded.event.ConfigChangedEvent;
 import com.dotnomi.stranded.event.handler.ConfigChangedEventHandler;
+import com.dotnomi.stranded.item.ModItemGroups;
 import com.dotnomi.stranded.item.ModItems;
 import com.dotnomi.stranded.logging.LoggerConfig;
 import com.dotnomi.stranded.network.ModC2SPayloads;
@@ -21,8 +23,11 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.render.RenderLayer;
 import org.slf4j.Logger;
 
 public class Stranded implements ModInitializer, ClientModInitializer {
@@ -39,6 +44,7 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 
 		ModItems.initialize();
 		ModBlocks.initialize();
+		ModItemGroups.initialize();
 		ModBlockEntities.initialize();
 		ModScreenHandlerTypes.initialize();
 		ModSounds.initialize();
@@ -58,6 +64,10 @@ public class Stranded implements ModInitializer, ClientModInitializer {
 
 		ModS2CPayloads.initialize();
 		ModKeyBindings.register();
+
+		WorldRenderEvents.LAST.register(new CableRenderer());
+
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POWER_OUTLET, RenderLayer.getCutout());
 
 		HandledScreens.register(ModScreenHandlerTypes.FABRICATOR, FabricatorScreen::new);
 

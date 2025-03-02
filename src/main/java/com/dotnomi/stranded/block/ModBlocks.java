@@ -1,6 +1,7 @@
 package com.dotnomi.stranded.block;
 
 import com.dotnomi.stranded.Stranded;
+import com.dotnomi.stranded.item.ModItemGroups;
 import com.dotnomi.stranded.item.ModItems;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
@@ -8,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -20,11 +20,13 @@ import java.util.function.Function;
 public class ModBlocks {
   public static final Block TITANIUM_FOUNDATION = register("titanium_foundation", AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
   public static final FabricatorBlock FABRICATOR = register("fabricator", FabricatorBlock::new, AbstractBlock.Settings.copy(Blocks.STONE));
+  public static final PowerOutletBlock POWER_OUTLET = register("power_outlet", PowerOutletBlock::new, AbstractBlock.Settings.copy(Blocks.STONE).nonOpaque());
 
   public static void initialize() {
-    ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+    ItemGroupEvents.modifyEntriesEvent(ModItemGroups.STRANDED_ITEMS).register(entries -> {
       entries.add(TITANIUM_FOUNDATION);
       entries.add(FABRICATOR);
+      entries.add(POWER_OUTLET);
     });
   }
 

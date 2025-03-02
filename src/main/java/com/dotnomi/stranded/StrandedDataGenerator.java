@@ -16,7 +16,6 @@ public class StrandedDataGenerator implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		Stranded.LOGGER.debug("Stranded Mod data generation...");
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-
 		pack.addProvider(EnglishLanguageProvider::new);
 		pack.addProvider(GermanLanguageProvider::new);
 		pack.addProvider(ModBlockTagProvider::new);

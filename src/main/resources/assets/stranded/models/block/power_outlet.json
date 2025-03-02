@@ -1,0 +1,92 @@
+{
+	"textures": {
+		"0": "stranded:block/power_outlet",
+		"particle": "stranded:block/power_outlet"
+	},
+	"elements": [
+		{
+			"name": "foundation",
+			"from": [5, 0, 5],
+			"to": [11, 1, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 0, 4]},
+			"faces": {
+				"north": {"uv": [6, 15, 12, 16], "texture": "#0"},
+				"east": {"uv": [0, 15, 6, 16], "texture": "#0"},
+				"south": {"uv": [13, 10, 14, 16], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [12, 10, 13, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [6, 15, 0, 9], "texture": "#0"},
+				"down": {"uv": [12, 9, 6, 15], "texture": "#0"}
+			}
+		},
+		{
+			"name": "outlet_casing",
+			"from": [6.5, 1, 6.5],
+			"to": [9.5, 6, 9.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 1, 4]},
+			"faces": {
+				"north": {"uv": [3, 0, 6, 5], "rotation": 180, "texture": "#0"},
+				"east": {"uv": [0, 0, 3, 5], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [9, 0, 12, 5], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [6, 0, 9, 5], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [6, 8, 3, 5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [9, 5, 6, 8], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"name": "outlet_wire",
+			"from": [6.25, 1.75, 6.25],
+			"to": [9.75, 2.25, 9.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, -3, 4]},
+			"faces": {
+				"north": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"east": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"south": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"west": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"up": {"uv": [16, 4, 12, 0], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 4, 16, 0], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"name": "outlet_wire",
+			"from": [6.25, 2.75, 6.25],
+			"to": [9.75, 3.25, 9.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, -2, 4]},
+			"faces": {
+				"north": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"east": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"south": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"west": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"up": {"uv": [16, 4, 12, 0], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 4, 16, 0], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"name": "outlet_wire",
+			"from": [6.25, 3.75, 6.25],
+			"to": [9.75, 4.25, 9.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, -1, 4]},
+			"faces": {
+				"north": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"east": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"south": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"west": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"up": {"uv": [16, 4, 12, 0], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 4, 16, 0], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"name": "outlet_wire",
+			"from": [6.25, 4.75, 6.25],
+			"to": [9.75, 5.25, 9.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 0, 4]},
+			"faces": {
+				"north": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"east": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"south": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"west": {"uv": [12, 4.5, 16, 4], "texture": "#0"},
+				"up": {"uv": [16, 4, 12, 0], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 4, 16, 0], "rotation": 270, "texture": "#0"}
+			}
+		}
+	]
+}
